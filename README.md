@@ -14,3 +14,8 @@ First idea that comes to mind, is of course a JVM, but jclass can also be used f
 ## License
 
 [MIT License](LICENSE)
+
+### Changes after fork
+    go get github.com/jcla1/jclass
+    /Users/i321172/go/pkg/mod/github.com/jcla1/jclass@v0.0.0-20140603161227-b5cf858c0316/attributes.go:375:26: duplicate argument a
+To fix above issue, folk the repo and do the changes. The repo is a bit old and last update in 2014...

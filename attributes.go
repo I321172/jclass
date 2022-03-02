@@ -372,7 +372,7 @@ type Synthetic struct{ baseAttribute }
 
 func (a *Synthetic) Synthetic() *Synthetic                  { return a }
 func (a *Synthetic) GetTag() AttributeType                  { return SyntheticTag }
-func (a *Synthetic) Read(a io.Reader, _ ConstantPool) error { return nil }
+func (a *Synthetic) Read(r io.Reader, _ ConstantPool) error { return nil }
 func (a *Synthetic) Dump(w io.Writer) error                 { return binary.Write(w, byteOrder, a) }
 
 // ClassFile, field_info, or method_info, may single
@@ -405,7 +405,7 @@ func (a *SourceFile) Read(r io.Reader, _ ConstantPool) error {
 
 func (a *SourceFile) Dump(w io.Writer) error { return binary.Write(w, byteOrder, a) }
 
-// ClassFile, may single
+// SourceDebugExtension ClassFile, may single
 type SourceDebugExtension struct {
 	baseAttribute
 	DebugExtension string
@@ -443,7 +443,7 @@ func (a *SourceDebugExtension) Dump(w io.Writer) error {
 	return binary.Write(w, byteOrder, []byte(a.DebugExtension))
 }
 
-// Code, may multiple
+// LineNumberTable Code, may multiple
 type LineNumberTable struct {
 	baseAttribute
 	Table []LineNumber
@@ -476,7 +476,7 @@ func (a *LineNumberTable) Dump(w io.Writer) error {
 	})
 }
 
-// Code, may multiple
+// LocalVariableTable Code, may multiple
 type LocalVariableTable struct {
 	baseAttribute
 	Table []LocalVariable
@@ -513,7 +513,7 @@ func (a *LocalVariableTable) Dump(w io.Writer) error {
 	})
 }
 
-// Code, may multiple
+// LocalVariableTypeTable Code, may multiple
 type LocalVariableTypeTable struct {
 	baseAttribute
 	Table []LocalVariableType
@@ -550,7 +550,7 @@ func (a *LocalVariableTypeTable) Dump(w io.Writer) error {
 	})
 }
 
-// ClassFile, field_info, or method_info, may single
+// Deprecated ClassFile, field_info, or method_info, may single
 type Deprecated struct{ baseAttribute }
 
 func (a *Deprecated) Deprecated() *Deprecated                { return a }
@@ -603,8 +603,8 @@ type AnnotationDefault struct {
 func (a *AnnotationDefault) AnnotationDefault() *AnnotationDefault { return a }
 func (a *AnnotationDefault) GetTag() AttributeType                 { return AnnotationDefaultTag }
 
-// ClassFile, may single
-// iff constpool conatains CONSTANT_InvokeDynamic_info
+// BootstrapMethods ClassFile, may single
+// if constpool contains CONSTANT_InvokeDynamic_info
 type BootstrapMethods struct {
 	baseAttribute
 	Methods []BootstrapMethod

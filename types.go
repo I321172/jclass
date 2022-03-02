@@ -63,7 +63,7 @@ type ClassFile struct {
 
 	// Methods contains method_info structs describing
 	// a method of this class or interface.
-	// If neiter METHOD_ACC_NATIVE or METHOD_ACC_ABSTRACT
+	// If neither METHOD_ACC_NATIVE or METHOD_ACC_ABSTRACT
 	// flags are set, the corresponding code for the method
 	// will also be supplied.
 	Methods []*Method
@@ -73,15 +73,15 @@ type ClassFile struct {
 	Attributes
 }
 
-// All Attributes and Constants, plus the actual class file
-// have to fullfill this interface. As you can guess, it's
+// Dumper All Attributes and Constants, plus the actual class file
+// have to fulfill this interface. As you can guess, it's
 // used when writing the class file back to its original
 // (binary) format.
 type Dumper interface {
 	Dump(io.Writer) error
 }
 
-// Attributes add extra/meta info to ClassFile, Field,
+// Attribute Attributes add extra/meta info to ClassFile, Field,
 // Method and Code structs. Any JVM implementation or
 // Java compiler, may create its own/new attribute(s).
 // Though these should not effect the sematics of the program.
@@ -91,10 +91,10 @@ type Attribute interface {
 
 	Read(io.Reader, ConstantPool) error
 
-	// Think of an Attribute value as a discriminated union.
+	// GetTag Think of an Attribute value as a discriminated union.
 	GetTag() AttributeType
 
-	// In order to actually access the fields of an attribute
+	// UnknownAttr In order to actually access the fields of an attribute
 	// you would need a type assertion in your code. But since
 	// the Java spec is quite precise on when you can expect
 	// what type of attribute (in a valid class file), we can
@@ -106,7 +106,7 @@ type Attribute interface {
 	UnknownAttr() *UnknownAttr
 	ConstantValue() *ConstantValue
 	Code() *Code
-	// StackMapTable() *StackMapTable
+	// Exceptions StackMapTable() *StackMapTable
 	Exceptions() *Exceptions
 	InnerClasses() *InnerClasses
 	EnclosingMethod() *EnclosingMethod
@@ -118,7 +118,7 @@ type Attribute interface {
 	LocalVariableTable() *LocalVariableTable
 	LocalVariableTypeTable() *LocalVariableTypeTable
 	Deprecated() *Deprecated
-	// RuntimeVisibleAnnotations() *RuntimeVisibleAnnotations
+	// BootstrapMethods : RuntimeVisibleAnnotations() *RuntimeVisibleAnnotations
 	// RuntimeInvisibleAnnotations() *RuntimeInvisibleAnnotations
 	// RuntimeVisibleParameterAnnotations() *RuntimeVisibleParameterAnnotations
 	// RuntimeInvisibleParameterAnnotations() *RuntimeInvisibleParameterAnnotations
@@ -126,7 +126,7 @@ type Attribute interface {
 	BootstrapMethods() *BootstrapMethods
 }
 
-// Costants reside in a class files constant pool and
+// Constant Constants reside in a class files constant pool and
 // are used in various places in a class file. They can
 // describe variable or method type signatures names of
 // variables or other classes. The pool also contains all
@@ -140,7 +140,7 @@ type Constant interface {
 
 	GetTag() ConstantType
 
-	// In order to actually access the fields of a constant
+	// Class In order to actually access the fields of a constant
 	// you would need a type assertion in your code. But since
 	// the Java spec is quite precise on when you can expect
 	// what type of constant (in a valid class file), we can
@@ -165,23 +165,23 @@ type Constant interface {
 	InvokeDynamic() *InvokeDynamicRef
 }
 
-// Describes a set of attributes as you would find them in a
+// Attributes Describes a set of attributes as you would find them in a
 // ClassFile, Method, Field or Code struct.
 type Attributes []Attribute
 
-// Every (valid) class will have a constant pool in which it
-// stores constants refrenced in the rest of the class file.
+// ConstantPool Every (valid) class will have a constant pool in which it
+// stores constants referenced in the rest of the class file.
 type ConstantPool []Constant
 
-// Index into the/a constant pool. This type is used so that
+// ConstPoolIndex Index into the/a constant pool. This type is used so that
 // you know, when a uint16 is actually an index.
 type ConstPoolIndex uint16
 
 // AccessFlags are a mask of flags that can determine things
 // like access privileges, cache options or implementation
-// details. There is no seperate type for each access flag
+// details. There is no separate type for each access flag
 // (i.e. for nested classes, methods, fields, etc.), but
-// each of those seperate types there are different constants
+// each of those separate types there are different constants
 // describing those access flags. See METHOD_ACC_*, FIELD_ACC_*
 // CLASS_ACC_*, and NESTED_CLASS_ACC_*.
 type AccessFlags uint16
