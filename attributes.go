@@ -185,7 +185,7 @@ func (a *UnknownAttr) Dump(w io.Writer) error {
 	})
 }
 
-// field_info, may single
+// ConstantValue field_info, may single
 // ACC_STATIC only
 type ConstantValue struct {
 	baseAttribute
@@ -201,7 +201,7 @@ func (a *ConstantValue) Read(r io.Reader, _ ConstantPool) error {
 
 func (a *ConstantValue) Dump(w io.Writer) error { return binary.Write(w, byteOrder, a) }
 
-// method_info, single
+// Code method_info, single
 // not if native or abstract
 type Code struct {
 	baseAttribute
@@ -282,7 +282,7 @@ type StackMapTable struct {
 
 func (a *StackMapTable) StackMapTable() *StackMapTable { return a }
 
-// method_info, may single
+// Exceptions method_info, may single
 type Exceptions struct {
 	baseAttribute
 	ExceptionsTable []ConstPoolIndex
@@ -310,7 +310,7 @@ func (a *Exceptions) Dump(w io.Writer) error {
 	})
 }
 
-// ClassFile, may single
+// InnerClasses ClassFile, may single
 type InnerClasses struct {
 	baseAttribute
 	Classes []InnerClass
@@ -345,7 +345,7 @@ func (a *InnerClasses) Dump(w io.Writer) error {
 	})
 }
 
-// ClassFile, may single
+// EnclosingMethod ClassFile, may single
 // iff local class or anonymous class
 type EnclosingMethod struct {
 	baseAttribute
@@ -365,7 +365,7 @@ func (a *EnclosingMethod) Read(r io.Reader, _ ConstantPool) error {
 
 func (a *EnclosingMethod) Dump(w io.Writer) error { return binary.Write(w, byteOrder, a) }
 
-// ClassFile, method_info or field_info, may single
+// Synthetic ClassFile, method_info or field_info, may single
 // if compiler generated
 // instead maybe: ACC_SYNTHETIC
 type Synthetic struct{ baseAttribute }
@@ -375,7 +375,7 @@ func (a *Synthetic) GetTag() AttributeType                  { return SyntheticTa
 func (a *Synthetic) Read(r io.Reader, _ ConstantPool) error { return nil }
 func (a *Synthetic) Dump(w io.Writer) error                 { return binary.Write(w, byteOrder, a) }
 
-// ClassFile, field_info, or method_info, may single
+// Signature ClassFile, field_info, or method_info, may single
 type Signature struct {
 	baseAttribute
 	SignatureIndex ConstPoolIndex
@@ -390,7 +390,7 @@ func (a *Signature) Read(r io.Reader, _ ConstantPool) error {
 
 func (a *Signature) Dump(w io.Writer) error { return binary.Write(w, byteOrder, a) }
 
-// ClassFile, may single
+// SourceFile ClassFile, may single
 type SourceFile struct {
 	baseAttribute
 	SourceFileIndex ConstPoolIndex
@@ -604,7 +604,7 @@ func (a *AnnotationDefault) AnnotationDefault() *AnnotationDefault { return a }
 func (a *AnnotationDefault) GetTag() AttributeType                 { return AnnotationDefaultTag }
 
 // BootstrapMethods ClassFile, may single
-// if constpool contains CONSTANT_InvokeDynamic_info
+// if constant pool contains CONSTANT_InvokeDynamic_info
 type BootstrapMethods struct {
 	baseAttribute
 	Methods []BootstrapMethod

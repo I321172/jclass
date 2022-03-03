@@ -7,7 +7,7 @@ import (
 
 var byteOrder = binary.BigEndian
 
-var initFuncs = []func(*ClassFile, io.Reader) error{
+var readFunctions = []func(*ClassFile, io.Reader) error{
 	(*ClassFile).readMagic,
 	(*ClassFile).readVersion,
 	(*ClassFile).readConstPool,
@@ -20,7 +20,7 @@ var initFuncs = []func(*ClassFile, io.Reader) error{
 	(*ClassFile).readAttributes,
 }
 
-var dumpFuncs = []func(*ClassFile, io.Writer) error{
+var dumpFunctions = []func(*ClassFile, io.Writer) error{
 	(*ClassFile).writeMagic,
 	(*ClassFile).writeVersion,
 	(*ClassFile).writeConstPool,
@@ -40,7 +40,7 @@ func Parse(r io.Reader) (*ClassFile, error) {
 
 	var err error
 
-	for _, f := range initFuncs {
+	for _, f := range readFunctions {
 		err = f(c, r)
 		if err != nil {
 			return nil, err
@@ -51,14 +51,14 @@ func Parse(r io.Reader) (*ClassFile, error) {
 }
 
 // Dump writes the binary representation of the
-// ClassFile struct to the provied io.Writer
+// ClassFile struct to the provided io.Writer
 // When a class file is parsed and then dumped
 // (unmodified), both (files) should be exactly
 // the same.
 func (c *ClassFile) Dump(w io.Writer) error {
 	var err error
 
-	for _, f := range dumpFuncs {
+	for _, f := range dumpFunctions {
 		err = f(c, w)
 		if err != nil {
 			return err
